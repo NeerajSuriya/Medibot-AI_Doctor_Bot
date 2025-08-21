@@ -49,7 +49,7 @@ def index():
 
 @app.route('/get',methods=["GET","POST"])
 def chat():
-    msg = request.form.get["msg"]
+    msg = request.form.get("msg")
     input = msg
     print(input)
     response = rag_chain.invoke({"input":msg})
