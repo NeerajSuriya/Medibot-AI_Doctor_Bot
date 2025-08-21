@@ -33,7 +33,14 @@ llm = llm = ChatOpenAI(
     model="llama3-8b-8192",  # You can try mistralai/mixtral-8x7b or others too
 )
 
-question_answer_chain = create_stuff_documents_chain(llm)
+prompt = ChatPromptTemplate.from_messages(
+    [
+        ("system", system_prompt),
+        ("human", "{input}"),
+    ]
+)
+
+question_answer_chain = create_stuff_documents_chain(llm,prompt)
 rag_chain = create_retrieval_chain(retriever,question_answer_chain)
 
 @app.route('/')
@@ -48,3 +55,6 @@ def chat():
     response = rag_chain.invoke({"input":msg})
     print("Response:",response["answer"])
     return str(response["answer"])
+
+if __name__ == '__main__':
+    app.run(host="0.0.0.0", port=8000, debug=True)
